@@ -2,7 +2,7 @@ use proc_macro2::TokenStream;
 use quote::{quote, quote_spanned};
 use syn::{Data, Fields, FieldsNamed};
 
-use crate::attributes_parsing::{create_row_attributes, FieldAlignment, parse_meta};
+use crate::attributes_parsing::{create_row_attributes, parse_meta, FieldAlignment};
 use crate::type_parsing::extract_option_type;
 
 pub fn from_positional_for_struct(ast: syn::DeriveInput) -> TokenStream {
@@ -38,9 +38,7 @@ pub fn from_positional_for_struct(ast: syn::DeriveInput) -> TokenStream {
     }
 }
 
-fn create_from_positional(
-    fields: &FieldsNamed,
-) -> Result<TokenStream, TokenStream> {
+fn create_from_positional(fields: &FieldsNamed) -> Result<TokenStream, TokenStream> {
     let fields: Vec<TokenStream> = parse_fields_into_struct_builder_stream(fields)?;
     Ok(quote! {
         fn parse(row: impl ToString) -> Result<Self, Box<dyn std::error::Error>> where Self: Sized {
